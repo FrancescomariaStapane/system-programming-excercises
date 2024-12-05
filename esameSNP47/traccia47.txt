@@ -1,0 +1,11 @@
+C'è un modo, per una funzione chiamata dal main, di esaminare gli
+argomenti passati sulla linea di comando del programma senza a) passare
+argc e argv come argomenti della chiamata della funzione o b) copiando
+argc e argv in una variabile globale? Studiare il problema e provare a
+implementare una soluzione se si riesce a trovarla.
+
+Is there any way for a function that is called by main to examine the
+command-line arguments without (a) passing argc and argv as arguments
+from main to the function or (b) having main copy argc and argv into
+global variables? Study the problem and try to implement a solution if
+it is found.

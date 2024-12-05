@@ -1,0 +1,6 @@
+Creare un processo che sia in grado di leggere dati in ingresso dallo
+standard input e sia in grado di scoprire autonomamente il path del file 
+assegnato al suo standard input, stampandolo a terminale.
+
+Create a process which is able to read data from its standard input and 
+prints to the terminal the name of the file assigned to its standard input.

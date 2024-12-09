@@ -1,10 +1,10 @@
 //Francescomaria Stapane 2024/12/5
 #include <stdio.h>
-#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+
 int global_var=1;
 void printargs(char* args);
 void readargs_with_stdio(char** args_str);

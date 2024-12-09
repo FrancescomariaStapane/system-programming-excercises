@@ -1,0 +1,33 @@
+Il seguente script bash aggiunge continuamente dati in un file:
+
+#_________________________________
+while true
+do
+	openssl rand 1000  >> dump.txt
+	sleep 1
+done
+#_________________________________
+
+Scrivere un programma C nel quale due thread si alternano nel leggere i
+dati progressivamente prodotti dallo script e nell'elaborarli alla
+ricerca di sequenze di tre caratteri alfanumerici uguali, indicando allo
+stdout il progresso dell'elaborazione, gli eventuali ritrovamenti e
+azzerando i byte già elaborati.
+
+
+The following bash script
+#_________________________________
+while true
+do
+	openssl rand 1000  >> dump.txt
+	sleep 1
+done
+#_________________________________
+
+continuously adds data to a file.
+
+Write a C program in which two threads take turns in reading the data
+produced by the script and in processing them, looking for sequences of
+three consecutive alphanumeric characters. They must print to the
+stdout the processing progress state, the found triplets and set
+to null the processed data. 

@@ -1,56 +1,85 @@
 //Francescomaria Stapane 2024/12/8
 
-#include <error.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <fcntl.h>
 #include "../include/utils.h"
-void file_copy_(char* origin_path, char* destination_path);
-long file_size_(int fd);
+#include <errno.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+char three_chars[3];
+static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+int fd;
+long size_of_file;
+long characters_read;
+void exit_err(int code, char* text){
+	perror(text);
+	exit(code);
+}
+int is_alphanum(char c){
+	return ((c > 47 && c < 58) ||  (c > 64 && c < 91) || (c > 96 && c < 123));
+}
+static void * threadFunc(void *arg)
+{
+    	int code = *((int *) arg);
+	int s;
+	//printf("ftell: %ld",ftell(fdopen(fd,"r")));
+    	while(characters_read < file_size(fd)){
+		characters_read++;
+		s = pthread_mutex_lock(&mtx);
+		if (s != 0)
+			exit_err(s, "error with mutex lock\n");
+		char ch;
+		s = read(fd, &ch, 1);
+		lseek(fd, -1, SEEK_CUR);
+		write(fd, "\000",1);
+		if (s < 0)
+			exit_err(s, "error reading file\n");
+		//printf("thread %d read this character: %c\n", code, ch);
+		if (characters_read % 10000 == 0){
+			printf("%d KB have been read so far \n", (int)characters_read/1000);
+		}	
+		three_chars[0]=three_chars[1];
+		three_chars[1]=three_chars[2];
+		three_chars[2]=ch;
+		if (three_chars[0] == three_chars[1] && three_chars[1] == three_chars [2] && is_alphanum(ch))	{
+			printf("found match in position %ld, character is %c\n", characters_read, ch);
+		}
+		s = pthread_mutex_unlock(&mtx);
+		if (s != 0)
+			exit_err(s, "error with mutex unlock\n");
 
+	}
+        
+    	return NULL;
+}
 
 int main(){
+	characters_read=0;
 	file_copy("dump.txt", "copy.txt");
+	//fd=open("copy.txt",O_RDWR);	
+	fd=open("dump.txt",O_RDWR);		
+	size_of_file = file_size(fd);
+	if (fd < 0)
+		exit_err(fd, "error opening file\n");
+	pthread_t t1, t2;
+	int s;
+	int th1=1, th2=2;
+	s = pthread_create(&t1, NULL, threadFunc, &th1);
+    	if (s != 0)
+		exit_err(s, "thred creation error\n");
+        	
+    	s = pthread_create(&t2, NULL, threadFunc, &th2);
+    	if (s != 0)
+		exit_err(s, "thred creation error\n");
+	pthread_join(t1, NULL);
+	pthread_join(t2, NULL);
+	
 }
 
 
+/*
+sources:
 
-
-long file_size_(int fd){
-	FILE* fp = fdopen(fd, "r");
-	if (fseek(fp, 0, SEEK_END)<0)
-		exit(-1);
-	long size = ftell(fp);
-	//fclose(fp);
-	return(size);
-}
-
-void file_copy_(char* origin_path, char* destination_path){
-	int origin_fd;
-	int destination_fd;
-	if ((origin_fd=open(origin_path,O_RDWR))<0){
-		perror("error opening origin file");
-		exit(-1);
-	}
-	if ((destination_fd=open(destination_path, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR))<0){
-		perror("error opening destination file");
-		exit(-2);
-	}
-	long size = file_size_(origin_fd);
-	char* copy = malloc(size);
-	printf("size: %ld\n",size);
-	lseek(origin_fd, 0, SEEK_SET);
-	if(read(origin_fd, copy, size)<0){
-		perror("error reading origin file");
-		exit(-3);
-	}
-	if(write(destination_fd, copy, size) != size){
-		perror("error writing on destination file");
-		exit(-4);
-	}
-	free(copy);
-	close(origin_fd);
-	close(destination_fd);
-}
+kerrisk/threads/thread_incr_mutex.c
+*/

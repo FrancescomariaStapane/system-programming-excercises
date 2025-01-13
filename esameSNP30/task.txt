@@ -1,0 +1,8 @@
+Scrivere un programma C che prenda come argomento il path di una directory e
+che stampi in ordine numerico crescente allo standard output tutti i numeri
+di inode dei file appartenenti al sottoalbero che ha la directory come
+radice.
+
+Write a C program that takes a directory path as an argument and prints to
+the standard output the inode numbers of all the files in the subtree rooted
+in the directory, in ascending numeric order.

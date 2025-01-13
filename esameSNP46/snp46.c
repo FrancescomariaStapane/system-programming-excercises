@@ -24,27 +24,32 @@ static void * threadFunc(void *arg)
     	int code = *((int *) arg);
 	int s;
 	//printf("ftell: %ld",ftell(fdopen(fd,"r")));
-    	while(characters_read < file_size(fd)){
-		characters_read++;
+    	//while(characters_read < file_size(fd)){
+	for(;;){		
 		s = pthread_mutex_lock(&mtx);
 		if (s != 0)
 			exit_err(s, "error with mutex lock\n");
 		char ch;
 		s = read(fd, &ch, 1);
-		lseek(fd, -1, SEEK_CUR);
-		write(fd, "\000",1);
+		//se ho effettivamente letto un nuovo byte
+		if ( s > 0){
+			characters_read++;
+			lseek(fd, -1, SEEK_CUR);
+			write(fd, "\000",1);
+			//printf("thread %d read this character: %c\n", code, ch);
+			if (characters_read % 10000 == 0){
+			printf("%d KB have been read so far \n", (int)characters_read/1000);
+			}
+			three_chars[0]=three_chars[1];
+			three_chars[1]=three_chars[2];
+			three_chars[2]=ch;
+			if (three_chars[0] == three_chars[1] && three_chars[1] == three_chars [2] && is_alphanum(ch)){
+				printf("Thread %d found match in position %ld, character is %c\n", code, characters_read, ch);
+			}
+
+		}
 		if (s < 0)
 			exit_err(s, "error reading file\n");
-		//printf("thread %d read this character: %c\n", code, ch);
-		if (characters_read % 10000 == 0){
-			printf("%d KB have been read so far \n", (int)characters_read/1000);
-		}	
-		three_chars[0]=three_chars[1];
-		three_chars[1]=three_chars[2];
-		three_chars[2]=ch;
-		if (three_chars[0] == three_chars[1] && three_chars[1] == three_chars [2] && is_alphanum(ch))	{
-			printf("found match in position %ld, character is %c\n", characters_read, ch);
-		}
 		s = pthread_mutex_unlock(&mtx);
 		if (s != 0)
 			exit_err(s, "error with mutex unlock\n");

@@ -1,0 +1,13 @@
+Scrivere un programma che funzioni da server UDP su due differenti porte e un
+programma che funzioni da client per tale server. Il servizio può consistere
+nella semplice visualizzazione a terminale di un carattere casuale inviato dal
+server su richiesta del client. Il client deve accedere al server con due thread
+(una per ciascuna delle due porte del server) e deve fare in modo che gli
+intervalli di tempo in cui le due thread accedono al server non siano mai,
+neanche parzialmente, sovrapposti. Per sincronizzare l'accesso al server delle
+due thread si usi un semaforo POSIX di tipo "named". Il server deve gestire gli
+accessi multipli tramite una chiamata "select".
+
+--------------------------------------------------------------------------------
+
+

@@ -1,0 +1,15 @@
+Un processo client ha due thread che cambiano di continuo a intervalli
+di tempo casuali il valore di una variabile d'ambiente A, assegnandole
+un numero intero casuale. 
+
+Gestire la concorrenza delle operazioni svolte dalle thread e fare in
+modo che un'altra thread comunichi via TCP a un server ogni valore
+modificato della variabile d'ambiente A. Il server, a sua volta, dovrà
+provedere ad aggiornare ad ogni ricezione il valore della sua variabile
+d'ambiente A.
+
+I due processi devono procedere fino a quando il client non sia
+interrotto. Non appena ciò accade, anche il server deve essere
+interrotto.
+
+Per la sperimentazione usare server e client sulla stessa macchina.

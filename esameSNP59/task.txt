@@ -1,0 +1,11 @@
+Un processo genera una sequenza di un milione di numeri interi casuali e
+la trasferisce ad un altro processo. Confrontare i tempi necessari al
+trasferimento impiegando tre metodi differenti: 1) una unnamed pipe, 
+2) un trasferimento TCP eseguito localmente, 3) una memoria condivisa.
+
+--------------------------------------------------------------------------
+
+A process generates a sequence of one million random integers and passes
+it to another process. Compare the times required for the transfer
+using three different methods: 1) an unnamed pipe, 2) a TCP transfer
+performed within the localhost, 3) a shared memory.
